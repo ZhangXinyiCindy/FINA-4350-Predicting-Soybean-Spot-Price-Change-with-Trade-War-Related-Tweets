@@ -41,40 +41,18 @@ We import the raw tweets data provided by Dr 高 and merged each tweet with the 
 We filtered the tweets contain “trade war” or “tariff” but not include “mexic”. The filtered  trade war related tweets have a size of 38,050 from 2018 Feb 04 to 2019 Nov 30.
 
 3. Text Preprocessing
-We preprocessed the text by removing Twitter listening keywords, non-English words, numbers, website links. At the beginning, we also removed punctuation manually before, but then we realised that sklearn package will take care of it. Removing punctuation in advance will cause difficulties for the tokenization package to recognize patterns.
-
-Besides, we also performed stemming and lemmatization with NLTK package. However, they have limited effect in grouping all forms of a single word as we still found some similar words appeared in the final most important list. Some of them are caused by English and American spelling (eg. Adviser and advisor) while the others caused by the user’s careless spelling (eg. tariffs, tarrif, tarriff) that cannot be easily handled by the package.
+We preprocessed the text by removing Twitter listening keywords, non-English words, numbers, website links. At the beginning, we also removed punctuation manually before, but then we realised that sklearn package will take care of it. Removing punctuation in advance will cause difficulties for the tokenization package to recognize patterns. Besides, we also performed stemming and lemmatization with NLTK package. However, they have limited effect in grouping all forms of a single word as we still found some similar words appeared in the final most important list. Some of them are caused by English and American spelling (eg. Adviser and advisor) while the others caused by the user’s careless spelling (eg. tariffs, tarrif, tarriff) that cannot be easily handled by the package.
 
 4. Split the data set
 We splitted the training/testing data on 2019 Nov 01. We use all the data from beginning to 2019 Oct 31 as the training data and the data from 2019 Nov 01 to 2019 Nov 30 as the testing data. (Indeed it is the validation data set since we are using the testing accuracy to decide hyper parameter “number of terms”)
 
 5. Convert text to Numbers
-We tried converting text data to numbers by both the Bag of Words technique and tf-idf method. From the final result, the performance of these two converting method has no significant difference. (The works are conducted in 2 separate jupyter notebook for two methods.) Though we also fitted models on Bag of Words version of work, our further exploration and analysis are built only on the tf-idf method.
-
-When we fit the tf-idf sparse matrix, we decided to drop words that appears in more than 90% of the documents and those words appeared less than 20 times (roughly 0.05% of all filtered data). Thus, our initial tf-idf matrix has 1631 words in total.
+We tried converting text data to numbers by both the Bag of Words technique and tf-idf method. From the final result, the performance of these two converting method has no significant difference. (The works are conducted in 2 separate jupyter notebook for two methods.) Though we also fitted models on Bag of Words version of work, our further exploration and analysis are built only on the tf-idf method. When we fit the tf-idf sparse matrix, we decided to drop words that appears in more than 90% of the documents and those words appeared less than 20 times (roughly 0.05% of all filtered data). Thus, our initial tf-idf matrix has 1631 words in total.
 
 6. Fit a black box model & obtain the list of variable importance
-A multiple layer neural network model(MLP-NN) was fitted as our initial exploration and obtain the list of words sorted by its importance. The accuracy of the MLP-NN full model (with all 1631 words as its variables) is 0.8508 on the training data and only 0.3368 on the testing data. It works will with training data while performing poorly with testing data, indicating the existence of overfitting. Demonstrating the need to improve data’s signal to noise ratio and further variables reduction.
+A multiple layer neural network model(MLP-NN) was fitted as our initial exploration and obtain the list of words sorted by its importance. The accuracy of the MLP-NN full model (with all 1631 words as its variables) is 0.8508 on the training data and only 0.3368 on the testing data. It works will with training data while performing poorly with testing data, indicating the existence of overfitting. Demonstrating the need to improve data’s signal to noise ratio and further variables reduction. Thus, we run a variable importance evaluation to rank the words with their relative importance. Variable importance is a commonly used technique to inspect black box models. It ranked the importance of each word by calculating feature value permutation. The key idea is that if a small change in a variable will cause a big change in the result, that variable is important. The left of the following is the table of most important 19 variables. The shades of green in cells color and the weighting scores indicate the importance of corresponding features. Thus, we constructed 2 more condensed tf-idf matrix with only the top 100 words and the top 19 most important words.
 
-Thus, we run a variable importance evaluation to rank the words with their relative importance. Variable importance is a commonly used technique to inspect black box models. It ranked the importance of each word by calculating feature value permutation. The key idea is that if a small change in a variable will cause a big change in the result, that variable is important.
-
-The left of the following is the table of most important 19 variables. The shades of green in cells color and the weighting scores indicate the importance of corresponding features.
-
-
-The full word-importance bar chart above on the right also indicates that the top 100~200 most important words contains most of the information.
-
-The following graph is a visualization of the top 100 most important words.
-
-Thus, we constructed 2 more condensed tf-idf matrix with only the top 100 words and the top 19 most important words.
-
-7. Fit Multiple layer Neural Network Model(MLP-NN), Naive Bayes Model(NB), Logistic Model with all (1631) terms(right) , the top 100 terms(middle) and the top 19 most important terms(left) for hyper parameter “number of words considered” specification.
-
-Multiple layer Neural Network Model(MLP-NN)
-
-Multiple layer Neural Network Model(MLP-NN) performed best with the top 19 most important terms(left), which is reasonable considering the complicated model is more vulnerable to noises in the data. From our exploration, we found that the signal to noise ratio in our data is still quite high after a series of noise removal process. So we believe the MLP-NN is not an ideal solution. However, the MLP-NN model provided us with a set of partial dependence plots that facilitated our interpretation in the relationship between terms and price-changes.
-
-Naive Bayes Model(NB) (left): Naive Bayes Model(NB) reaches its highest accuracy on testing data with 100 most important variables. 
-Logistic model (right): Logistic model performed quite well on all three set of input variables and also reaches the highest predicting accuracy on testing data with the top 19 most important terms(left).
+7. Fit Multiple layer Neural Network Model(MLP-NN), Naive Bayes Model(NB), Logistic Model with all (1631) terms(right) , the top 100 terms(middle) and the top 19 most important terms(left) for hyper parameter “number of words considered” specification. Multiple layer Neural Network Model(MLP-NN) performed best with the top 19 most important terms(left), which is reasonable considering the complicated model is more vulnerable to noises in the data. From our exploration, we found that the signal to noise ratio in our data is still quite high after a series of noise removal process. So we believe the MLP-NN is not an ideal solution. However, the MLP-NN model provided us with a set of partial dependence plots that facilitated our interpretation in the relationship between terms and price-changes. Naive Bayes Model(NB) reaches its highest accuracy on testing data with 100 most important variables. Logistic model (right): Logistic model performed quite well on all three set of input variables and also reaches the highest predicting accuracy on testing data with the top 19 most important terms(left).
 
 
 
