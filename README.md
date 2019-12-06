@@ -1,5 +1,7 @@
 # FINA-4350-Predicting-Soybean-Spot-Price-Change-with-Trade-War-Related-Tweets
 Term Project Instructor: Dr. Matthias Buehlmaier       Group: YayNLP
+Please open the html version of codes for the best effect.
+We believe the source data we obtained from professor should not be published. Please use the code for listening tweets to collect data first if you would like to re-run our code.
 # Background
 
 Since US-Sino trade war (“Trade War”) burst out in March 2018, the event has affected a wide range of business in the two countries, and the impact even spreads worldwide. Soybean has been among the commodities with the largest import amount to China from the U.S., which inevitably bore the brunt of the Trade War. 
